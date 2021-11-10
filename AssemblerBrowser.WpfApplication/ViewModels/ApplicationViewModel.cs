@@ -51,9 +51,12 @@ public class ApplicationViewModel : INotifyPropertyChanged
         {
             return new ActionCommand(() =>
             {
-                var openFileDialog = new OpenFileDialog();
+                var openFileDialog = new OpenFileDialog
+                {
+                    Filter = "Assemblies (*.dll, *.exe) | *.dll; *.exe"
+                };
                 bool? dialogResult = openFileDialog.ShowDialog();
-                if (dialogResult != true) return;
+                if (dialogResult != dialogResult) return;
 
                 string assemblyFilePath = openFileDialog.FileName;
                 var assembly = Assembly.LoadFile(assemblyFilePath);
