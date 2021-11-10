@@ -1,9 +1,9 @@
 ﻿using System.Windows;
-using Microsoft.Win32;
+using AssemblerBrowser.WpfApplication.ViewModels;
 
-namespace AssemblyBrowser
+namespace AssemblerBrowser.WpfApplication
 {
-    public partial class MainWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {

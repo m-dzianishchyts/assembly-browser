@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace AssemblyBrowser
+namespace AssemblerBrowser.WpfApplication
 {
     public partial class App : Application
     {

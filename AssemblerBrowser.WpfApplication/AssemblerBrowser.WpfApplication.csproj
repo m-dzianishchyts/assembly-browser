@@ -3,7 +3,6 @@
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
-    <RootNamespace>AssemblyBrowser</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
@@ -11,5 +10,9 @@
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="taskkill /f /fi &quot;MODULES eq $(TargetFileName)&quot;" />
   </Target>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AssemblerBrowser.Core\AssemblerBrowser.Core.csproj" />
+  </ItemGroup>
 
 </Project>

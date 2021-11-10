@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace AssemblyBrowser;
+namespace AssemblerBrowser.WpfApplication.ViewModels;
 
 public class ActionCommand : ICommand
 {

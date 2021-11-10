@@ -1,14 +1,19 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using AssemblerBrowser.Core.Entities;
 using Microsoft.Win32;
 
-namespace AssemblyBrowser;
+namespace AssemblerBrowser.WpfApplication.ViewModels;
 
 public class ApplicationViewModel : INotifyPropertyChanged
 {
     private string? _assemblyFilePath;
     private string? _assemblyName;
+    private IEnumerable<NamespaceViewModel>? _namespaces;
 
     public string? AssemblyFilePath
     {
@@ -30,6 +35,15 @@ public class ApplicationViewModel : INotifyPropertyChanged
         }
     }
 
+    public IEnumerable<NamespaceViewModel>? Namespaces
+    {
+        get => _namespaces;
+        set
+        {
+            _namespaces = value;
+            OnPropertyChanged(nameof(Namespaces));
+        }
+    }
 
     public ActionCommand LoadAssemblyCommand
     {
@@ -44,8 +58,12 @@ public class ApplicationViewModel : INotifyPropertyChanged
                     return;
                 }
 
-                // todo: Load assembly data to tree-like collection
-                AssemblyFilePath = openFileDialog.FileName;
+                string assemblyFilePath = openFileDialog.FileName;
+                var assembly = Assembly.LoadFile(assemblyFilePath);
+                var assemblyInformation = new AssemblyInformation(assembly);
+                Namespaces = assemblyInformation.Namespaces
+                    .Select(namespaceInformation => new NamespaceViewModel(namespaceInformation));
+                AssemblyFilePath = assemblyFilePath;
                 AssemblyName = Path.GetFileNameWithoutExtension(AssemblyFilePath);
             });
         }
