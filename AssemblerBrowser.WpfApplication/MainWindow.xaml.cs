@@ -1,14 +1,13 @@
 ﻿using System.Windows;
 using AssemblerBrowser.WpfApplication.ViewModels;
 
-namespace AssemblerBrowser.WpfApplication
+namespace AssemblerBrowser.WpfApplication;
+
+public partial class MainWindow : Window
 {
-    public partial class MainWindow : Window
+    public MainWindow()
     {
-        public MainWindow()
-        {
-            InitializeComponent();
-            DataContext = new ApplicationViewModel();
-        }
+        InitializeComponent();
+        DataContext = new ApplicationViewModel();
     }
 }

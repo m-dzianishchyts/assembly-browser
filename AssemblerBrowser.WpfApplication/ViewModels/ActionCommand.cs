@@ -7,21 +7,24 @@ public class ActionCommand : ICommand
 {
     private readonly Action _execute;
 
+    public ActionCommand(Action execute)
+    {
+        _execute = execute;
+    }
+
     public event EventHandler? CanExecuteChanged
     {
         add => CommandManager.RequerySuggested += value;
         remove => CommandManager.RequerySuggested -= value;
     }
 
-    public ActionCommand(Action execute)
+    public bool CanExecute(object? parameter)
     {
-        this._execute = execute;
+        return true;
     }
-
-    public bool CanExecute(object? parameter) => true;
 
     public void Execute(object? parameter)
     {
-        this._execute();
+        _execute();
     }
 }

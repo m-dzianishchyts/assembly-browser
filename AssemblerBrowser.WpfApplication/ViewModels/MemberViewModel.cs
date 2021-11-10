@@ -2,42 +2,41 @@
 using System.Runtime.CompilerServices;
 using AssemblerBrowser.Core.Entities;
 
-namespace AssemblerBrowser.WpfApplication.ViewModels
+namespace AssemblerBrowser.WpfApplication.ViewModels;
+
+public class MemberViewModel
 {
-    public class MemberViewModel
+    private string _name;
+
+    public MemberViewModel(FieldInformation field)
     {
-        private string _name;
+        Name = field.Name;
+    }
 
-        public MemberViewModel(FieldInformation field)
+    public MemberViewModel(PropertyInformation property)
+    {
+        Name = property.Name;
+    }
+
+    public MemberViewModel(MethodInformation method)
+    {
+        Name = method.Name;
+    }
+
+    public string Name
+    {
+        get => _name;
+        set
         {
-            Name = field.Name;
+            _name = value;
+            OnPropertyChanged();
         }
+    }
 
-        public MemberViewModel(PropertyInformation property)
-        {
-            Name = property.Name;
-        }
+    public event PropertyChangedEventHandler PropertyChanged;
 
-        public MemberViewModel(MethodInformation method)
-        {
-            Name = method.Name;
-        }
-
-        public string Name
-        {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+    private void OnPropertyChanged([CallerMemberName] string prop = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
 }

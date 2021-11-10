@@ -4,45 +4,43 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using AssemblerBrowser.Core.Entities;
 
-namespace AssemblerBrowser.WpfApplication.ViewModels
+namespace AssemblerBrowser.WpfApplication.ViewModels;
+
+public class NamespaceViewModel : INotifyPropertyChanged
 {
-    public class NamespaceViewModel : INotifyPropertyChanged
+    private string _name;
+    private IEnumerable<TypeViewModel> _types;
+
+    public NamespaceViewModel(NamespaceInformation namespaceInformation)
     {
-        private IEnumerable<TypeViewModel> _types;
+        Name = namespaceInformation.Name;
+        Types = namespaceInformation.Types.Select(type => new TypeViewModel(type));
+    }
 
-        private string _name;
-
-        public NamespaceViewModel(NamespaceInformation namespaceInformation)
+    public string Name
+    {
+        get => _name;
+        set
         {
-            Name = namespaceInformation.Name;
-            Types = namespaceInformation.Types.Select(type => new TypeViewModel(type));
+            _name = value;
+            OnPropertyChanged();
         }
+    }
 
-        public string Name
+    public IEnumerable<TypeViewModel> Types
+    {
+        get => _types;
+        set
         {
-            get => _name;
-            set
-            {
-                _name = value;
-                OnPropertyChanged();
-            }
+            _types = value;
+            OnPropertyChanged();
         }
+    }
 
-        public IEnumerable<TypeViewModel> Types
-        {
-            get => _types;
-            set
-            {
-                _types = value;
-                OnPropertyChanged();
-            }
-        }
+    public event PropertyChangedEventHandler? PropertyChanged;
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        private void OnPropertyChanged([CallerMemberName] string prop = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
-        }
+    private void OnPropertyChanged([CallerMemberName] string prop = "")
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
 }

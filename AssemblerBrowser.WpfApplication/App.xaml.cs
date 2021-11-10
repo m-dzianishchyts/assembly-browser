@@ -1,8 +1,7 @@
 ﻿using System.Windows;
 
-namespace AssemblerBrowser.WpfApplication
+namespace AssemblerBrowser.WpfApplication;
+
+public partial class App : Application
 {
-    public partial class App : Application
-    {
-    }
 }

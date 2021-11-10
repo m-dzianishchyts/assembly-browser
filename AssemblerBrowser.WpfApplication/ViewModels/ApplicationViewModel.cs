@@ -53,10 +53,7 @@ public class ApplicationViewModel : INotifyPropertyChanged
             {
                 var openFileDialog = new OpenFileDialog();
                 bool? dialogResult = openFileDialog.ShowDialog();
-                if (dialogResult != true)
-                {
-                    return;
-                }
+                if (dialogResult != true) return;
 
                 string assemblyFilePath = openFileDialog.FileName;
                 var assembly = Assembly.LoadFile(assemblyFilePath);
