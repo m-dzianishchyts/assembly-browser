@@ -4,10 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using AssemblerBrowser.Core.Entities;
+using AssemblyBrowser.Core.Entities;
 using Microsoft.Win32;
 
-namespace AssemblerBrowser.WpfApplication.ViewModels;
+namespace AssemblyBrowser.WpfApplication.ViewModels;
 
 public class ApplicationViewModel : INotifyPropertyChanged
 {
@@ -56,10 +56,13 @@ public class ApplicationViewModel : INotifyPropertyChanged
                     Filter = "Assemblies (*.dll, *.exe) | *.dll; *.exe"
                 };
                 bool? dialogResult = openFileDialog.ShowDialog();
-                if (dialogResult != true) return;
+                if (dialogResult != true)
+                {
+                    return;
+                }
 
                 string assemblyFilePath = openFileDialog.FileName;
-                var assembly = Assembly.LoadFile(assemblyFilePath);
+                Assembly? assembly = Assembly.LoadFile(assemblyFilePath);
                 var assemblyInformation = new AssemblyInformation(assembly);
                 Namespaces = assemblyInformation.Namespaces
                     .Select(namespaceInformation => new NamespaceViewModel(namespaceInformation));

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace AssemblerBrowser.Core.Entities;
+namespace AssemblyBrowser.Core.Entities;
 
 public class AssemblyInformation
 {
@@ -19,7 +19,7 @@ public class AssemblyInformation
 
     private static Dictionary<string, List<Type>> ExtractAssemblyInformation(Assembly assembly)
     {
-        var types = GetLoadedAssemblyTypes(assembly);
+        IEnumerable<Type> types = GetLoadedAssemblyTypes(assembly);
         return GetNamespacesToTypesDictionary(types);
     }
 
@@ -38,13 +38,15 @@ public class AssemblyInformation
     private static Dictionary<string, List<Type>> GetNamespacesToTypesDictionary(IEnumerable<Type> types)
     {
         var namespacesToClassesDictionary = new Dictionary<string, List<Type>>();
-        foreach (var type in types)
+        foreach (Type? type in types)
         {
             string name = type.Namespace ?? "<>";
             if (!namespacesToClassesDictionary.ContainsKey(name))
+            {
                 namespacesToClassesDictionary.Add(name, new List<Type>());
+            }
 
-            namespacesToClassesDictionary.TryGetValue(name, out var classes);
+            namespacesToClassesDictionary.TryGetValue(name, out List<Type>? classes);
             classes?.Add(type);
         }
 

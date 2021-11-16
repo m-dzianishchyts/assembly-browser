@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using AssemblerBrowser.Core.Utilities;
+using AssemblyBrowser.Core.Utilities;
 
-namespace AssemblerBrowser.Core.Entities;
+namespace AssemblyBrowser.Core.Entities;
 
 public class NamespaceInformation
 {
@@ -13,7 +13,7 @@ public class NamespaceInformation
     public NamespaceInformation(string space, IEnumerable<Type> types)
     {
         Name = space;
-        Types = types.Where(type => !CompilerUtilities.IsCompilerGenerated(type))
+        Types = types.Where(type => !CompilerUtilities.IsCompilerGenerated(type) && !type.IsNested)
             .Select(type => new TypeInformation(type));
     }
 }

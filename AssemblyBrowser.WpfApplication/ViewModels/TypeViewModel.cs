@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using AssemblerBrowser.Core.Entities;
+using AssemblyBrowser.Core.Entities;
 
-namespace AssemblerBrowser.WpfApplication.ViewModels;
+namespace AssemblyBrowser.WpfApplication.ViewModels;
 
 public class TypeViewModel
 {
@@ -15,9 +15,12 @@ public class TypeViewModel
     public TypeViewModel(TypeInformation typeInformation)
     {
         Name = typeInformation.Name;
-        var memberPropertyView = typeInformation.Properties.Select(property => new MemberViewModel(property));
-        var memberMethodView = typeInformation.Methods.Select(method => new MemberViewModel(method));
-        var memberFieldView = typeInformation.Fields.Select(field => new MemberViewModel(field));
+        IEnumerable<MemberViewModel> memberPropertyView =
+            typeInformation.Properties.Select(property => new MemberViewModel(property));
+        IEnumerable<MemberViewModel> memberMethodView =
+            typeInformation.Methods.Select(method => new MemberViewModel(method));
+        IEnumerable<MemberViewModel> memberFieldView =
+            typeInformation.Fields.Select(field => new MemberViewModel(field));
         Members = memberFieldView.Concat(memberPropertyView).Concat(memberMethodView);
     }
 

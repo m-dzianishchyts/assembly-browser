@@ -2,9 +2,9 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using AssemblerBrowser.Core.Entities;
+using AssemblyBrowser.Core.Entities;
 
-namespace AssemblerBrowser.WpfApplication.ViewModels;
+namespace AssemblyBrowser.WpfApplication.ViewModels;
 
 public class NamespaceViewModel : INotifyPropertyChanged
 {

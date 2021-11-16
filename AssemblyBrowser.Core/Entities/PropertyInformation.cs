@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
-using AssemblerBrowser.Core.Utilities;
+using AssemblyBrowser.Core.Utilities;
 
-namespace AssemblerBrowser.Core.Entities;
+namespace AssemblyBrowser.Core.Entities;
 
 public class PropertyInformation
 {

@@ -12,7 +12,7 @@
   </Target>
 
   <ItemGroup>
-    <ProjectReference Include="..\AssemblerBrowser.Core\AssemblerBrowser.Core.csproj" />
+    <ProjectReference Include="..\AssemblyBrowser.Core\AssemblyBrowser.Core.csproj" />
   </ItemGroup>
 
 </Project>
