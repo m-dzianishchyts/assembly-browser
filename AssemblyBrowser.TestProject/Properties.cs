@@ -8,7 +8,7 @@ namespace AssemblyBrowser.TestProject;
 [SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "<Pending>")]
 [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-public abstract class ClassWithProperties : ClassWithPropertiesToOverride
+public abstract class Properties : PropertiesToOverride
 {
     public sealed override int Property0 { get; set; }
     public abstract int Property1 { get; set; }

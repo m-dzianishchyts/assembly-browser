@@ -50,25 +50,26 @@ public class ApplicationViewModel : INotifyPropertyChanged
         get
         {
             return new ActionCommand(() =>
-            {
-                var openFileDialog = new OpenFileDialog
-                {
-                    Filter = "Assemblies (*.dll, *.exe) | *.dll; *.exe"
-                };
-                bool? dialogResult = openFileDialog.ShowDialog();
-                if (dialogResult != true)
-                {
-                    return;
-                }
+                                     {
+                                         var openFileDialog = new OpenFileDialog
+                                         {
+                                             Filter = "Assemblies (*.dll, *.exe) | *.dll; *.exe"
+                                         };
+                                         bool? dialogResult = openFileDialog.ShowDialog();
+                                         if (dialogResult != true)
+                                         {
+                                             return;
+                                         }
 
-                string assemblyFilePath = openFileDialog.FileName;
-                Assembly assembly = Assembly.LoadFile(assemblyFilePath);
-                var assemblyInformation = new AssemblyInformation(assembly);
-                Namespaces = assemblyInformation.Namespaces
-                    .Select(namespaceInformation => new NamespaceViewModel(namespaceInformation));
-                AssemblyFilePath = assemblyFilePath;
-                AssemblyName = Path.GetFileNameWithoutExtension(AssemblyFilePath);
-            });
+                                         string assemblyFilePath = openFileDialog.FileName;
+                                         Assembly assembly = Assembly.LoadFile(assemblyFilePath);
+                                         var assemblyInformation = new AssemblyInformation(assembly);
+                                         Namespaces = assemblyInformation.Namespaces
+                                             .Select(namespaceInformation =>
+                                                         new NamespaceViewModel(namespaceInformation));
+                                         AssemblyFilePath = assemblyFilePath;
+                                         AssemblyName = Path.GetFileNameWithoutExtension(AssemblyFilePath);
+                                     });
         }
     }
 

@@ -11,7 +11,7 @@ namespace AssemblyBrowser.TestProject;
 [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
 [SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "<Pending>")]
-public abstract class ClassWithMethods : ClassWithMethodsToOverride
+public abstract class Methods : MethodsToOverride
 {
     public sealed override void Method0()
     {

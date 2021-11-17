@@ -13,7 +13,7 @@ public class AssemblyInformation
     {
         Namespaces = ExtractAssemblyInformation(assembly)
             .Select(namespaceToTypesPair =>
-                new NamespaceInformation(namespaceToTypesPair.Key, namespaceToTypesPair.Value))
+                        new NamespaceInformation(namespaceToTypesPair.Key, namespaceToTypesPair.Value))
             .Where(namespaceInformation => namespaceInformation.Types.Any());
     }
 

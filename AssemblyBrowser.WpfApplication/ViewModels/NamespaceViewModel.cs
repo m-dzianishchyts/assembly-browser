@@ -1,9 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using AssemblyBrowser.Core.Entities;
-using AssemblyBrowser.WpfApplication.TreeItem;
 
 namespace AssemblyBrowser.WpfApplication.ViewModels;
 

@@ -10,7 +10,7 @@ namespace AssemblyBrowser.TestProject;
 [SuppressMessage("Usage", "CA2211:Non-constant fields should not be visible", Justification = "<Pending>")]
 [SuppressMessage("Style", "IDE0044:Add readonly modifier", Justification = "<Pending>")]
 [SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "<Pending>")]
-public class ClassWithFields
+public class Fields
 {
     public const int field2 = 0;
     private const int field7 = 0;

@@ -1,6 +1,6 @@
 ﻿namespace AssemblyBrowser.TestProject;
 
-public class ClassWithNestedTypes
+public class NestedTypes
 {
     public sealed class Type0
     {
