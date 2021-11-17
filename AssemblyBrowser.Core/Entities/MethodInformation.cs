@@ -1,4 +1,7 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using AssemblyBrowser.Core.Utilities;
 
 namespace AssemblyBrowser.Core.Entities;
@@ -14,28 +17,29 @@ public class MethodInformation
 
     private static string GetSignature(MethodInfo method)
     {
-        var signature = $"{TypeUtilities.GetName(method.ReturnType)} {method.Name}(";
-        ParameterInfo[] methodParameters = method.GetParameters();
-        if (methodParameters.Length == 0)
+        string methodName = method.Name;
+        IEnumerable<Type> arguments = method.GetGenericArguments();
+        if (arguments.Any())
         {
-            return $"{signature})";
+            IEnumerable<string> argumentsName = method.GetGenericArguments().Select(TypeUtilities.GetName);
+            var argumentsDeclaration = $"<{string.Join(", ", argumentsName)}>";
+            methodName += argumentsDeclaration;
         }
 
-        foreach (ParameterInfo? parameter in methodParameters)
+        string returnType = TypeUtilities.GetName(method.ReturnType);
+        ParameterInfo[] parameters = method.GetParameters();
+        if (parameters.Length == 0)
         {
-            if (parameter.IsOut)
-            {
-                signature += "out ";
-            }
-
-            signature += $"{TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}, ";
+            return $"{returnType} {methodName}()";
         }
 
-        while (signature.IndexOf('&') != -1)
-        {
-            signature = signature.Replace('&', ' ');
-        }
+        IEnumerable<string> parameterNames = parameters.Select(parameter =>
+            parameter.IsOut
+                ? $"out {TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}"
+                : $"{TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}");
 
-        return signature.Substring(0, signature.Length - 2) + ")";
+        string parametersDeclaration = string.Join(", ", parameterNames);
+
+        return $"{returnType} {methodName}({parametersDeclaration})";
     }
 }
