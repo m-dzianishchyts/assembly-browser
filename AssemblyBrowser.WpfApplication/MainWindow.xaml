@@ -3,6 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModels="clr-namespace:AssemblyBrowser.WpfApplication.ViewModels"
+        xmlns:treeItem="clr-namespace:AssemblyBrowser.WpfApplication.TreeItem"
         mc:Ignorable="d" Title="MainWindow" Height="450" Width="800"
         d:DataContext="{d:DesignInstance Type=viewModels:ApplicationViewModel}">
     <Grid>
@@ -26,24 +28,18 @@
         </Separator>
         <ScrollViewer Grid.Column="2" BorderBrush="Transparent" VerticalScrollBarVisibility="Auto" Margin="5">
             <TreeView ItemsSource="{Binding Namespaces}">
-                <TreeView.ItemTemplate>
-                    <DataTemplate>
-                        <TreeViewItem Header="{Binding Name}" ItemsSource="{Binding Types}">
-                            <TreeViewItem.ItemTemplate>
-                                <DataTemplate>
-                                    <TreeViewItem Header="{Binding Name}" ItemsSource="{Binding Members}"
-                                                  IsExpanded="True">
-                                        <TreeViewItem.ItemTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Text="{Binding Name}" />
-                                            </DataTemplate>
-                                        </TreeViewItem.ItemTemplate>
-                                    </TreeViewItem>
-                                </DataTemplate>
-                            </TreeViewItem.ItemTemplate>
-                        </TreeViewItem>
-                    </DataTemplate>
-                </TreeView.ItemTemplate>
+                <TreeView.Resources>
+                    <HierarchicalDataTemplate DataType="{x:Type treeItem:LabeledTreeItem}"
+                                              ItemsSource="{Binding Path=Children}">
+                        <TextBlock Text="{Binding Path=Label}" />
+                        <HierarchicalDataTemplate.ItemTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type treeItem:LabeledTreeItem}"
+                                                      ItemsSource="{Binding Children}">
+                                <TextBlock Text="{Binding Label}" />
+                            </HierarchicalDataTemplate>
+                        </HierarchicalDataTemplate.ItemTemplate>
+                    </HierarchicalDataTemplate>
+                </TreeView.Resources>
             </TreeView>
         </ScrollViewer>
     </Grid>

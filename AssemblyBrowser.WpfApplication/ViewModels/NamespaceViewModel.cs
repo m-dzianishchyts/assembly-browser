@@ -3,44 +3,18 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using AssemblyBrowser.Core.Entities;
+using AssemblyBrowser.WpfApplication.TreeItem;
 
 namespace AssemblyBrowser.WpfApplication.ViewModels;
 
-public class NamespaceViewModel : INotifyPropertyChanged
+public class NamespaceViewModel : TreeItemViewModel
 {
-    private string _name;
-    private IEnumerable<TypeViewModel> _types;
-
-    public NamespaceViewModel(NamespaceInformation namespaceInformation)
+    public NamespaceViewModel(NamespaceInformation namespaceInformation) : base(namespaceInformation.Name)
     {
-        Name = namespaceInformation.Name;
-        Types = namespaceInformation.Types.Select(type => new TypeViewModel(type));
-    }
-
-    public string Name
-    {
-        get => _name;
-        set
+        IEnumerable<TypeViewModel> typeViewModels = namespaceInformation.Types.Select(type => new TypeViewModel(type));
+        foreach (TypeViewModel typeViewModel in typeViewModels)
         {
-            _name = value;
-            OnPropertyChanged();
+            Children.Add(typeViewModel);
         }
-    }
-
-    public IEnumerable<TypeViewModel> Types
-    {
-        get => _types;
-        set
-        {
-            _types = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public event PropertyChangedEventHandler? PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string prop = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
 }

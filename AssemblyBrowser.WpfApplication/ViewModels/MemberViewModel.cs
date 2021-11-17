@@ -1,42 +1,18 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using AssemblyBrowser.Core.Entities;
+﻿using AssemblyBrowser.Core.Entities;
 
 namespace AssemblyBrowser.WpfApplication.ViewModels;
 
-public class MemberViewModel
+public class MemberViewModel : TreeItemViewModel
 {
-    private string _name;
-
-    public MemberViewModel(FieldInformation field)
+    public MemberViewModel(FieldInformation field) : base(field.Name)
     {
-        Name = field.Name;
     }
 
-    public MemberViewModel(PropertyInformation property)
+    public MemberViewModel(PropertyInformation property) : base(property.Name)
     {
-        Name = property.Name;
     }
 
-    public MemberViewModel(MethodInformation method)
+    public MemberViewModel(MethodInformation method) : base(method.Name)
     {
-        Name = method.Name;
-    }
-
-    public string Name
-    {
-        get => _name;
-        set
-        {
-            _name = value;
-            OnPropertyChanged();
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    private void OnPropertyChanged([CallerMemberName] string prop = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
     }
 }

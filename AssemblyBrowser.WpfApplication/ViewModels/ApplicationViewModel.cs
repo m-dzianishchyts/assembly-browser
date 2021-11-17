@@ -62,7 +62,7 @@ public class ApplicationViewModel : INotifyPropertyChanged
                 }
 
                 string assemblyFilePath = openFileDialog.FileName;
-                Assembly? assembly = Assembly.LoadFile(assemblyFilePath);
+                Assembly assembly = Assembly.LoadFile(assemblyFilePath);
                 var assemblyInformation = new AssemblyInformation(assembly);
                 Namespaces = assemblyInformation.Namespaces
                     .Select(namespaceInformation => new NamespaceViewModel(namespaceInformation));

@@ -1,54 +1,44 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using AssemblyBrowser.Core.Entities;
+using AssemblyBrowser.WpfApplication.TreeItem;
 
 namespace AssemblyBrowser.WpfApplication.ViewModels;
 
-public class TypeViewModel
+public class TypeViewModel : LabeledTreeItem
 {
-    private IEnumerable<MemberViewModel> _members;
-
-    private string _name;
-
-    public TypeViewModel(TypeInformation typeInformation)
+    public TypeViewModel(TypeInformation typeInformation) : base(typeInformation.Name)
     {
-        Name = typeInformation.Name;
-        IEnumerable<MemberViewModel> memberPropertyView =
-            typeInformation.Properties.Select(property => new MemberViewModel(property));
-        IEnumerable<MemberViewModel> memberMethodView =
-            typeInformation.Methods.Select(method => new MemberViewModel(method));
-        IEnumerable<MemberViewModel> memberFieldView =
-            typeInformation.Fields.Select(field => new MemberViewModel(field));
-        Members = memberFieldView.Concat(memberPropertyView).Concat(memberMethodView);
-    }
-
-
-    public string Name
-    {
-        get => _name;
-        set
+        IEnumerable<MemberViewModel> propertyViewModels = typeInformation.Properties
+            .Select(property => new MemberViewModel(property))
+            .ToList();
+        foreach (MemberViewModel propertyViewModel in propertyViewModels)
         {
-            _name = value;
-            OnPropertyChanged();
+            Children.Add(propertyViewModel);
         }
-    }
 
-    public IEnumerable<MemberViewModel> Members
-    {
-        get => _members;
-        set
+        IEnumerable<MemberViewModel> methodViewModels = typeInformation.Methods
+            .Select(method => new MemberViewModel(method))
+            .ToList();
+        foreach (MemberViewModel methodViewModel in methodViewModels)
         {
-            _members = value;
-            OnPropertyChanged();
+            Children.Add(methodViewModel);
         }
-    }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+        IEnumerable<MemberViewModel> fieldViewModels = typeInformation.Fields
+            .Select(field => new MemberViewModel(field))
+            .ToList();
+        foreach (MemberViewModel fieldViewModel in fieldViewModels)
+        {
+            Children.Add(fieldViewModel);
+        }
 
-    private void OnPropertyChanged([CallerMemberName] string prop = "")
-    {
-        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
+        IEnumerable<TypeViewModel> nestedTypeViewModels = typeInformation.NestedTypes
+            .Select(nestedType => new TypeViewModel(nestedType))
+            .ToList();
+        foreach (TypeViewModel nestedTypeViewModel in nestedTypeViewModels)
+        {
+            Children.Add(nestedTypeViewModel);
+        }
     }
 }
