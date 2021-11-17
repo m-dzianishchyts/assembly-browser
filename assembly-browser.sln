@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBrowser.WpfApplicat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBrowser.Core", "AssemblyBrowser.Core\AssemblyBrowser.Core.csproj", "{1AB9D764-06DF-485B-B191-D63B2CC98E8F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBrowser.Tests", "AssemblyBrowser.Test\AssemblyBrowser.Tests.csproj", "{E6635D94-DAC2-44AF-B8CA-74168BB3FDC9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBrowser.Tests", "AssemblyBrowser.Tests\AssemblyBrowser.Tests.csproj", "{E6635D94-DAC2-44AF-B8CA-74168BB3FDC9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssemblyBrowser.TestProject", "AssemblyBrowser.TestProject\AssemblyBrowser.TestProject.csproj", "{88C98B76-7155-46AF-B2D8-3A2FEB431566}"
 EndProject
