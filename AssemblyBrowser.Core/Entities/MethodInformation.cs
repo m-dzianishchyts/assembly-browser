@@ -10,36 +10,46 @@ public class MethodInformation
 {
     public readonly string Name;
 
-    public MethodInformation(MethodInfo method)
+    public MethodInformation(MethodBase method)
     {
         Name = $"{ModifierUtilities.GetMethodModifiers(method)} {GetSignature(method)}";
     }
 
-    private static string GetSignature(MethodInfo method)
+    private static string GetSignature(MethodBase method)
     {
         string methodName = method.Name;
-        IEnumerable<Type> arguments = method.GetGenericArguments();
-        if (arguments.Any())
+
+        if (!method.IsConstructor)
         {
-            IEnumerable<string> argumentsName = method.GetGenericArguments().Select(TypeUtilities.GetName);
-            var argumentsDeclaration = $"<{string.Join(", ", argumentsName)}>";
-            methodName += argumentsDeclaration;
+            var commonMethod = (MethodInfo) method;
+            IEnumerable<Type> arguments = commonMethod.GetGenericArguments();
+            if (arguments.Any())
+            {
+                IEnumerable<string> argumentsName = arguments.Select(TypeUtilities.GetName);
+                var argumentsDeclaration = $"<{string.Join(", ", argumentsName)}>";
+                methodName += argumentsDeclaration;
+            }
+        }
+        else if (method.DeclaringType is not null)
+        {
+            string fullName = TypeUtilities.GetName(method.DeclaringType);
+            methodName = fullName.Split(".").Last();
         }
 
-        string returnType = TypeUtilities.GetName(method.ReturnType);
         ParameterInfo[] parameters = method.GetParameters();
-        if (parameters.Length == 0)
-        {
-            return $"{returnType} {methodName}()";
-        }
-
-        IEnumerable<string> parameterNames = parameters.Select(parameter =>
-            parameter.IsOut
-                ? $"out {TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}"
-                : $"{TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}");
+        IEnumerable<string> parameterNames =
+            parameters.Select(parameter => parameter.IsOut
+                                  ? $"out {TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}"
+                                  : $"{TypeUtilities.GetName(parameter.ParameterType)} {parameter.Name}");
 
         string parametersDeclaration = string.Join(", ", parameterNames);
 
+        if (method.IsConstructor)
+        {
+            return $"{methodName}({parametersDeclaration})";
+        }
+
+        string returnType = TypeUtilities.GetName(((MethodInfo) method).ReturnType);
         return $"{returnType} {methodName}({parametersDeclaration})";
     }
 }

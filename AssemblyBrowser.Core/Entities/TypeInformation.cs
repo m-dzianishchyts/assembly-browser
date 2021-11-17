@@ -19,7 +19,9 @@ public class TypeInformation
     public TypeInformation(Type type)
     {
         Name = $"{ModifierUtilities.GetClassModifiers(type)} {TypeUtilities.GetName(type)}";
-        Methods = GetMethods(type.GetMethods(TypeBindingFlags));
+        IEnumerable<MethodBase> actualMethods = type.GetMethods(TypeBindingFlags);
+        actualMethods = actualMethods.Concat(type.GetConstructors(TypeBindingFlags));
+        Methods = GetMethods(actualMethods);
         Fields = GetFields(type.GetFields(TypeBindingFlags));
         Properties = GetProperties(type.GetProperties(TypeBindingFlags));
         NestedTypes = GetNestedTypes(type.GetNestedTypes(TypeBindingFlags));
@@ -41,7 +43,7 @@ public class TypeInformation
         return nestedTypes;
     }
 
-    private static IEnumerable<MethodInformation> GetMethods(IEnumerable<MethodInfo> members)
+    private static IEnumerable<MethodInformation> GetMethods(IEnumerable<MethodBase> members)
     {
         return members.Where(member => !CompilerUtilities.IsCompilerGenerated(member))
             .Select(member => new MethodInformation(member));

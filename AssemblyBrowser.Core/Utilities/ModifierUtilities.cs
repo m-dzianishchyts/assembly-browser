@@ -7,7 +7,7 @@ namespace AssemblyBrowser.Core.Utilities;
 
 public class ModifierUtilities
 {
-    public static string GetMethodModifiers(MethodInfo method)
+    public static string GetMethodModifiers(MethodBase method)
     {
         IEnumerable<string> modifiers = new List<string>
         {
@@ -79,7 +79,7 @@ public class ModifierUtilities
         return string.Join(" ", propertyModifiers);
     }
 
-    private static string DetermineSpecialModificator(MethodInfo method)
+    private static string DetermineSpecialModificator(MethodBase method)
     {
         if (method.IsAbstract)
         {
@@ -104,7 +104,7 @@ public class ModifierUtilities
         return field.IsStatic ? "static" : string.Empty;
     }
 
-    private static string DetermineAccessModificator(MethodInfo method)
+    private static string DetermineAccessModificator(MethodBase method)
     {
         if (method.IsPublic)
         {
