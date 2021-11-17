@@ -127,7 +127,8 @@ public class Tests
             "private protected abstract System.Void Method23()",
             "private protected virtual System.Void Method24()",
             "private protected static System.Void Method25()",
-            "private protected System.Void Method26()"
+            "private protected System.Void Method26()",
+            "protected Methods()"
         };
 
         var expectedMethodsToOverride = new List<string>
@@ -136,7 +137,8 @@ public class Tests
             "protected virtual System.Void Method7()",
             "internal virtual System.Void Method12()",
             "protected internal virtual System.Void Method17()",
-            "private protected virtual System.Void Method22()"
+            "private protected virtual System.Void Method22()",
+            "public MethodsToOverride()"
         };
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
@@ -325,7 +327,8 @@ public class Tests
         {
             "public static TType Method0<TType>(TType value)",
             "public static TType Method1<TType>(TType[] values)",
-            "public List<List<TType>> Method2<TType>()"
+            "public List<List<TType>> Method2<TType>()",
+            "public GenericMethods()"
         };
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
