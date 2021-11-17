@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using AssemblyBrowser.Core.Entities;
 using AssemblyBrowser.TestProject;
 using NUnit.Framework;
@@ -15,6 +16,8 @@ public class Tests
         "AssemblyBrowser.TestProject\\bin\\Debug\\net6.0\\AssemblyBrowser.TestProject.dll";
 
     private const string AbsolutePathToAssembly = AbsolutePathToSolution + RelativePathToAssembly;
+
+    private const string AssemblyName = "AssemblyBrowser.TestProject";
 
     private readonly Assembly _testAssembly = Assembly.LoadFile(AbsolutePathToAssembly);
 
@@ -31,7 +34,7 @@ public class Tests
     {
         var expectedNamespaces = new List<string>
         {
-            typeof(ClassWithFields).Namespace!
+            typeof(Fields).Namespace!
         };
 
         IEnumerable<NamespaceInformation> namespacesInformation = _assemblyInformation!.Namespaces;
@@ -79,10 +82,13 @@ public class Tests
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
             .First(namespaceInformation => namespaceInformation.Name
-                .Equals(typeof(ClassWithFields).Namespace));
+                       .Equals(typeof(Fields).Namespace)
+            );
         TypeInformation classWithFieldsInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithFields).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(Fields).FullName)
+            );
 
         IEnumerable<FieldInformation> fieldsInformation = classWithFieldsInformation.Fields;
         IEnumerable<string> fields = fieldsInformation.Select(fieldInformation => fieldInformation.Name);
@@ -135,13 +141,18 @@ public class Tests
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
             .First(namespaceInformation => namespaceInformation.Name
-                .Equals(typeof(ClassWithMethods).Namespace));
+                       .Equals(typeof(Methods).Namespace)
+            );
         TypeInformation classWithMethodsInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithMethods).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(Methods).FullName)
+            );
         TypeInformation classWithMethodsToOverrideInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithMethodsToOverride).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(MethodsToOverride).FullName)
+            );
 
         IEnumerable<MethodInformation> methodsInformation = classWithMethodsInformation.Methods;
         IEnumerable<MethodInformation> methodsToOverrideInformation = classWithMethodsToOverrideInformation.Methods;
@@ -198,13 +209,18 @@ public class Tests
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
             .First(namespaceInformation => namespaceInformation.Name
-                .Equals(typeof(ClassWithProperties).Namespace));
+                       .Equals(typeof(Properties).Namespace)
+            );
         TypeInformation classWithPropertiesInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithProperties).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(Properties).FullName)
+            );
         TypeInformation classWithPropertiesToOverrideInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithPropertiesToOverride).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(PropertiesToOverride).FullName)
+            );
 
         IEnumerable<PropertyInformation> propertiesInformation = classWithPropertiesInformation.Properties;
         IEnumerable<PropertyInformation> propertiesToOverrideInformation =
@@ -263,14 +279,129 @@ public class Tests
 
         NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
             .First(namespaceInformation => namespaceInformation.Name
-                .Equals(typeof(ClassWithNestedTypes).Namespace));
+                       .Equals(typeof(NestedTypes).Namespace)
+            );
         TypeInformation classWithClassesInformation = targetNamespaceInformation.Types
-            .First(typeInformation => typeInformation.Name.Split(" ")
-                .Contains(typeof(ClassWithNestedTypes).FullName));
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(NestedTypes).FullName)
+            );
 
         IEnumerable<TypeInformation> nestedTypesInformation = classWithClassesInformation.NestedTypes;
         IEnumerable<string> nestedTypes =
             nestedTypesInformation.Select(nestedTypeInformation => nestedTypeInformation.Name);
         CollectionAssert.AreEquivalent(expectedNestedTypes, nestedTypes);
+    }
+
+    [Test]
+    public void AssemblyInformation_Contains_GenericClass()
+    {
+        const string expectedGenericClass = "public class GenericClass<TType>";
+        const string expectedField = "private TType _value";
+        const string expectedMethod = "public TType Method(TType value)";
+
+        NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
+            .First(namespaceInformation => namespaceInformation.Name
+                       .Equals(typeof(GenericClass<>).Namespace)
+            );
+        TypeInformation genericClass = targetNamespaceInformation.Types
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Last()
+                       .Contains(Regex.Replace(typeof(GenericClass<>).Name, "[`\\d]", ""))
+            );
+        FieldInformation field = genericClass.Fields.First();
+        MethodInformation method = genericClass.Methods.First();
+
+        Assert.AreEqual(expectedGenericClass, genericClass.Name);
+        Assert.AreEqual(expectedField, field.Name);
+        Assert.AreEqual(expectedMethod, method.Name);
+    }
+
+    [Test]
+    public void AssemblyInformation_ContainsAll_GenericMethods()
+    {
+        var expectedMethods = new List<string>
+        {
+            "public static TType Method0<TType>(TType value)",
+            "public static TType Method1<TType>(TType[] values)",
+            "public List<List<TType>> Method2<TType>()"
+        };
+
+        NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
+            .First(namespaceInformation => namespaceInformation.Name
+                       .Equals(typeof(GenericMethods).Namespace)
+            );
+        TypeInformation classWithGenericMethods = targetNamespaceInformation.Types
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(GenericMethods).FullName)
+            );
+        IEnumerable<MethodInformation> methodsInformation = classWithGenericMethods.Methods;
+        IEnumerable<string> methods = methodsInformation.Select(methodInformation => methodInformation.Name);
+
+        CollectionAssert.AreEquivalent(expectedMethods, methods);
+    }
+
+    [Test]
+    public void AssemblyInformation_ContainsAll_DeepNestedTypes()
+    {
+        var nestedTypesDictionary = new Dictionary<string, IEnumerable<string>>
+        {
+            {
+                $"public class {AssemblyName}.{nameof(DeepNestedTypes)}", new List<string>
+                {
+                    $"public class {AssemblyName}.Type0"
+                }
+            },
+            {
+                $"public class {AssemblyName}.Type0", new List<string>
+                {
+                    $"public class {AssemblyName}.Type1"
+                }
+            },
+            {
+                $"public class {AssemblyName}.Type1", new List<string>
+                {
+                    $"public class {AssemblyName}.Type2"
+                }
+            },
+            {
+                $"public class {AssemblyName}.Type2", Enumerable.Empty<string>()
+            }
+        };
+
+        NamespaceInformation targetNamespaceInformation = _assemblyInformation!.Namespaces
+            .First(namespaceInformation => namespaceInformation.Name
+                       .Equals(typeof(DeepNestedTypes).Namespace)
+            );
+        TypeInformation classWithDeepNestedTypes = targetNamespaceInformation.Types
+            .First(typeInformation => typeInformation.Name
+                       .Split(" ")
+                       .Contains(typeof(DeepNestedTypes).FullName)
+            );
+        TypeInformation currentTypeInformation = classWithDeepNestedTypes;
+        IEnumerable<TypeInformation> nestedTypesInformation = currentTypeInformation.NestedTypes;
+
+        AssemblyInformation_ContainsAll_DeepNestedTypes_Stage(currentTypeInformation, nestedTypesInformation,
+                                                              nestedTypesDictionary);
+    }
+
+    private static void AssemblyInformation_ContainsAll_DeepNestedTypes_Stage(TypeInformation currentTypeInformation,
+                                                                              IEnumerable<TypeInformation>
+                                                                                  nestedTypesInformation,
+                                                                              IDictionary<string, IEnumerable<string>>
+                                                                                  nestedTypesDictionary)
+    {
+        IEnumerable<string> expectedNestedTypes = nestedTypesDictionary[currentTypeInformation.Name];
+        IEnumerable<TypeInformation> nestedTypesInformationList = nestedTypesInformation.ToList();
+        IEnumerable<string> nestedTypes = nestedTypesInformationList.Select(typeInformation => typeInformation.Name);
+        CollectionAssert.AreEquivalent(expectedNestedTypes, nestedTypes);
+
+        foreach (TypeInformation typeInformation in nestedTypesInformationList)
+        {
+            AssemblyInformation_ContainsAll_DeepNestedTypes_Stage(typeInformation, typeInformation.NestedTypes,
+                                                                  nestedTypesDictionary);
+        }
     }
 }
